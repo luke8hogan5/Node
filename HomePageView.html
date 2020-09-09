@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script>
+        document.getElementById('ekko').addEventListener('swapPage',swapPage());
+        document.getElementById('ekko').emit('swapPage');
+    </script>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Welcome To The Page</h1>
+<h3>Select a champion</h3>
+<div>
+    <form action="">
+        <label for="searchBar">Search a champion</label>
+        <input id="searchBar" type="text" value="Enter Champion Name">
+        <input type="submit" value="search">
+    </form>
+</div>
+<div>
+    <button value="diana">Diana</button> &nbsp;
+    <a href="/Node/Ekko.html" value="Ekko" class="btn btn-large">Ekko</a>
+    <p id="isPressed"></p>
+</div>
+<div ng-app="">
+    <p>Champion Name : <input type="text" ng-model="name"> </p>
+    <h1>Hello {{name}}</h1>
+</div>
+</body>
+</html>

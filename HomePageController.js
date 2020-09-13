@@ -1,11 +1,10 @@
 var http = require('http');
 var url = require('url');
 var fs = require('fs');
-var event = require('Node/Events');
+var event = require('events');
 var path = require('path');
 var eventEmitter = new event.EventEmitter();
 const champObject = require('./championModel');
-const Logger = require('./logger');
 var express = require('express'); // Express Form Handling
 
 http.createServer(function (req,res){
@@ -57,7 +56,7 @@ http.createServer(function (req,res){
             }
             eventEmitter.addListener("swapPage",listener1);
             eventEmitter.on("swapPage",listener1);
-            //eventEmitter.emit("swapPage");
+            eventEmitter.emit("swapPage");
 
             return res.end();
         }

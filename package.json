@@ -2,7 +2,7 @@
   "name": "league",
   "version": "1.0.0",
   "description": "Node Test",
-  "main": "index.js",
+  "main": "HomePageController.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node HomePageController",
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^3.6.3",
     "uuid": "^8.3.0"
   },
   "devDependencies": {

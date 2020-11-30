@@ -1,64 +1,54 @@
 var http = require('http');
+var https = require('https');
+
 var url = require('url');
 var fs = require('fs');
 var event = require('events');
 var path = require('path');
 var eventEmitter = new event.EventEmitter();
-const champObject = require('./championModel');
 var express = require('express'); // Express Form Handling
+var mongo = require('mongodb');
+
+const MongoClient = require('./DatabaseConnect');
 
 http.createServer(function (req,res){
 
-    let q = url.parse(req.url,true);
+      var q = url.parse(req.url, true);
+      var filename = "." + q.pathname;
 
-    let ekko = new champObject("Ekko", 23);
-
-    let filePath = path.join(__dirname, '', req.url === '/' ? 'HomePageView.html' : req.url);
-    console.log("File Path = " + filePath);
-
-    let extName = path.extname(filePath);
-    let contentType = 'text/html';
-
-    switch(extName){
-        case '.js' :
-            contentType = 'text/javascript';
-            break;
-        case '.css' :
-            contentType = 'text/css';
-            break;
-        case '.json' :
-            contentType = 'application/json';
-            break;
-        case '.png' :
-            contentType = 'image/png';
-            break;
-        case '.jpg' :
-            contentType = 'image/jpg';
-            break;
-    }
-
-    fs.readFile(filePath,(err, data) => {
-        if(err){
-            res.writeHead(404, {'Content-Type': 'text/html'}); // Fs.readFile() Error Page
-            return  res.end("404 Not Found : " + filePath);
-        }else{
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(data);
-            res.write(ekko.name);
-
-            let myEventHandler = function () {
-                res.write("function fired");
-            }
-            eventEmitter.on("btnPress", myEventHandler);
-
-            let listener1 = function listener1(){
-                console.log("Button Fired");
-            }
-            eventEmitter.addListener("swapPage",listener1);
-            eventEmitter.on("swapPage",listener1);
-            eventEmitter.emit("swapPage");
-
-            return res.end();
+      fs.readFile(filename, function(err, data) {
+        if (err) {
+      //  res.writeHead(404, {'Content-Type': 'text/html'});
+          return res.end("404 Not Found");
         }
-    });
+        //res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        return res.end();
+      });
+
+        let championList = MongoClient.findChampions();
+        console.log(championList);
+
 }).listen(8080);
+
+//euw1.api.riotgames.com
+//europe.api.riotgames.com
+
+https.get('https://euw1.api.riotgames.com/?api_key=RGAPI-ee2b1c83-9865-488f-b62a-681e865842e5', (resp) => {
+
+  console.log('statusCode:',resp.statusCode);
+  console.log('headers:',resp.headers);
+
+  let data = '';
+
+  resp.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  resp.on('end', () => {
+    console.log(JSON.parse(data).explanation);
+  });
+
+}).on("error", (err) => {
+  console.log("Error: " + err.message);
+});
